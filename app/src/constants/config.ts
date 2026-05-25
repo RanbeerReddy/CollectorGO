@@ -4,5 +4,5 @@ export const CONFIG = {
   // For MVP, hardcoded credentials
   // Replace with real auth API call in v2
   DEMO_USERNAME: 'fieldworker',
-  DEMO_PASSWORD: 'collectorgo2024',
+  DEMO_PASSWORD: 'pass123',
 } as const;
