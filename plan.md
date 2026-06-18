@@ -1,3 +1,24 @@
+i just need the app to work smothly with multiple concurrent users.
+
+the users database. like admins and employees.
+
+need to see whats with the hosting.
+
+aur just the kobo forms in the app.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # CollectorGO — Full Project Plan & System Design
 
 # Vision
