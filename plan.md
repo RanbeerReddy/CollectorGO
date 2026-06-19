@@ -8,17 +8,6 @@ aur just the kobo forms in the app.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # CollectorGO — Full Project Plan & System Design
 
 # Vision
