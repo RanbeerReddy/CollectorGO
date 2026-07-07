@@ -2,3 +2,112 @@ API kobo tool.xlsx
 .env
 
 docs/
+
+# --- Python / uv ---
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (created by uv or venv)
+.venv/
+venv/
+ENV/
+env/
+
+# uv specific
+uv.lock
+.python-version
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# --- IDE / Editor ---
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs (PyCharm, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Others
+.DS_Store
+*.swp
+*.swo
+*~
+
+# --- Environment Variables ---
+# Local environment files (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Keep the example file though!
+!.env.example
+
+# --- Docker ---
+# Docker compose override (local dev specific)
+docker-compose.override.yml
+
+# Docker volumes (if mapped locally)
+# data/ 
+# postgres_data/
+
+# --- Logs & Database ---
+# Logs
+*.log
+logs/
+
+# SQLite databases (common in dev)
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Testing ---
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# --- OS ---
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride   
