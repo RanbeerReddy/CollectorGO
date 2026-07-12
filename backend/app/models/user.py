@@ -1,3 +1,19 @@
+import uuid
+
+from sqlalchemy import Boolean
+from sqlalchemy import Enum
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+
+from app.models.base import Base
+from app.models.base import TimestampMixin
+from app.models.base import UUIDMixin
+from app.models.enums import UserRole
+
 class User(
     UUIDMixin,
     TimestampMixin,
@@ -52,6 +68,7 @@ class User(
         nullable=False,
     )
 
-    organization: Mapped["Organization"] = relationship(
+    organization = relationship(
+        "Organization",
         back_populates="users",
     )
