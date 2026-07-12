@@ -1,21 +1,14 @@
-from sqlalchemy import Boolean
-from sqlalchemy import Enum
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-
-from app.models.base import Base
-from app.models.base import TimestampMixin
-from app.models.base import UUIDMixin
-from app.models.enums import UserRole
-
-
 class User(
     UUIDMixin,
     TimestampMixin,
     Base,
 ):
     __tablename__ = "users"
+
+    organization_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("organizations.id"),
+    )
 
     username: Mapped[str] = mapped_column(
         String(50),
@@ -53,8 +46,12 @@ class User(
         nullable=False,
     )
 
-    is_verified: Mapped[bool] = mapped_column(
+    is_superuser: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
         nullable=False,
+    )
+
+    organization: Mapped["Organization"] = relationship(
+        back_populates="users",
     )
