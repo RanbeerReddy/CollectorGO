@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 from fastapi import HTTPException
 from fastapi import status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -31,4 +33,9 @@ async def create_user(session: AsyncSession, user_in: UserCreate) -> User:
     user_data["password_hash"] = get_password_hash(password)
 
     # Create user
+    # Create user
     return await user_repository.create(session, user_data)
+
+
+async def get_users(session: AsyncSession) -> Sequence[User]:
+    return await user_repository.get_all(session)

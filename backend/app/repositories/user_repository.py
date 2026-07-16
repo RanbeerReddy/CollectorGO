@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,4 +23,11 @@ async def create(session: AsyncSession, user_data: dict) -> User:
     session.add(user)
     await session.commit()
     await session.refresh(user)
+    await session.refresh(user)
     return user
+
+
+async def get_all(session: AsyncSession) -> Sequence[User]:
+    stmt = select(User)
+    result = await session.execute(stmt)
+    return result.scalars().all()
