@@ -3,6 +3,7 @@ from collections.abc import Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.models.form_assignment import FormAssignment
 
@@ -14,13 +15,13 @@ async def get_by_id(session: AsyncSession, assignment_id: uuid.UUID) -> FormAssi
 
 
 async def get_all(session: AsyncSession) -> Sequence[FormAssignment]:
-    stmt = select(FormAssignment)
+    stmt = select(FormAssignment).options(selectinload(FormAssignment.form))
     result = await session.execute(stmt)
     return result.scalars().all()
 
 
 async def get_by_user_id(session: AsyncSession, user_id: uuid.UUID) -> Sequence[FormAssignment]:
-    stmt = select(FormAssignment).where(FormAssignment.user_id == user_id)
+    stmt = select(FormAssignment).where(FormAssignment.user_id == user_id).options(selectinload(FormAssignment.form))
     result = await session.execute(stmt)
     return result.scalars().all()
 

@@ -14,7 +14,7 @@ export function FormWebViewScreen({ route }: Props) {
   return (
     <View style={styles.container}>
       <WebView
-        source={{ uri: form.url }}
+        source={{ uri: form.enketo_url || 'https://enke.to' }}
         onLoadStart={() => setIsLoading(true)}
         onLoadEnd={() => setIsLoading(false)}
         javaScriptEnabled={true}

@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 from app.models.enums import AssignmentStatus
+from app.schemas.form import FormResponse
 
 
 class FormAssignmentCreate(BaseModel):
@@ -22,5 +23,6 @@ class FormAssignmentResponse(BaseModel):
     completed_at: datetime | None
     created_at: datetime
     updated_at: datetime
+    form: FormResponse | None = None
 
     model_config = ConfigDict(from_attributes=True)

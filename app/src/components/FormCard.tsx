@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { KoboForm } from '@/types';
+import { AppForm } from '@/types';
 
 type Props = {
-  form: KoboForm;
-  onPress: (form: KoboForm) => void;
+  form: AppForm;
+  onPress: (form: AppForm) => void;
 };
 
 export function FormCard({ form, onPress }: Props) {

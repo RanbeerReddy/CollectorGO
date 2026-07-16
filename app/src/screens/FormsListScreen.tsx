@@ -1,17 +1,49 @@
-import React from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList, KoboForm } from '@/types';
+import { RootStackParamList, AppForm, FormAssignment } from '@/types';
 import { FormCard } from '@/components/FormCard';
-import { FORMS } from '@/constants/forms';
 import { useAuth } from '@/hooks/useAuth';
+import { CONFIG } from '@/constants/config';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FormsList'>;
 
 export function FormsListScreen({ navigation }: Props) {
   const { logout, user } = useAuth();
+  const [assignments, setAssignments] = useState<FormAssignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFormPress = (form: KoboForm) => {
+  const fetchAssignments = useCallback(async () => {
+    if (!user?.token) return;
+    
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${CONFIG.API_URL}/assignments/my`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to load assignments');
+      }
+
+      const data = await res.json();
+      setAssignments(data);
+    } catch (err: any) {
+      setError(err.message || 'Error loading forms');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user?.token]);
+
+  useEffect(() => {
+    fetchAssignments();
+  }, [fetchAssignments]);
+
+  const handleFormPress = (form: AppForm) => {
     navigation.navigate('FormWebView', { form });
   };
 
@@ -26,15 +58,29 @@ export function FormsListScreen({ navigation }: Props) {
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={FORMS}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <FormCard form={item} onPress={handleFormPress} />
-        )}
-        contentContainerStyle={styles.list}
-        ListEmptyComponent={<Text style={styles.empty}>No forms available.</Text>}
-      />
+      
+      {isLoading ? (
+        <View style={styles.center}>
+          <ActivityIndicator size="large" color="#1976D2" />
+        </View>
+      ) : error ? (
+        <View style={styles.center}>
+          <Text style={styles.error}>{error}</Text>
+          <TouchableOpacity onPress={fetchAssignments} style={styles.retryBtn}>
+            <Text style={styles.retryText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <FlatList
+          data={assignments}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <FormCard form={item.form} onPress={handleFormPress} />
+          )}
+          contentContainerStyle={styles.list}
+          ListEmptyComponent={<Text style={styles.empty}>No forms assigned to you.</Text>}
+        />
+      )}
     </View>
   );
 }
@@ -64,5 +110,9 @@ const styles = StyleSheet.create({
   },
   logoutText: { color: '#D32F2F', fontSize: 13, fontWeight: '600' },
   list: { padding: 16 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   empty: { textAlign: 'center', color: '#999', marginTop: 40 },
+  error: { color: '#D32F2F', fontSize: 14, marginBottom: 16 },
+  retryBtn: { padding: 12, backgroundColor: '#1976D2', borderRadius: 8 },
+  retryText: { color: 'white', fontWeight: 'bold' }
 });

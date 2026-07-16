@@ -12,20 +12,27 @@ export function useAuth() {
     setError(null);
 
     try {
-      // MVP: simple credential check against hardcoded values
-      // v2: replace with POST to Kobo API or your own auth endpoint
-      await new Promise(resolve => setTimeout(resolve, 1000)); // simulate network
+      const response = await fetch(`${CONFIG.API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-      if (
-        username === CONFIG.DEMO_USERNAME &&
-        password === CONFIG.DEMO_PASSWORD
-      ) {
-        login(username, 'demo-token-mvp');
-      } else {
-        setError('Invalid username or password');
+      if (!response.ok) {
+        throw new Error('Invalid username or password');
       }
-    } catch (e) {
-      setError('Login failed. Check your connection.');
+
+      const data = await response.json();
+      // data should contain access_token
+      if (data.access_token) {
+        await login(username, data.access_token);
+      } else {
+        throw new Error('Authentication token missing');
+      }
+    } catch (e: any) {
+      setError(e.message || 'Login failed. Check your connection.');
     } finally {
       setIsLoading(false);
     }

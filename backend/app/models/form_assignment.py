@@ -7,6 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.models.base import Base
@@ -28,6 +29,8 @@ class FormAssignment(
         nullable=False,
         index=True,
     )
+
+    form: Mapped["Form"] = relationship("Form")
 
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
