@@ -1,252 +1,98 @@
-# CollectorGO — NGO Field Data Collection App
+# CollectorGO — NGO Field Data Collection & Operations Platform
 
-CollectorGO is a mobile-first NGO field data collection application built using React Native + Expo.
+CollectorGO is a scalable NGO field operations platform designed for data collection, field workforce management, analytics, and operational workflows.
 
-The application is designed for field workers to access and fill KoboToolbox forms through a clean mobile interface while leveraging existing Kobo infrastructure for form handling, submissions, and data pipelines.
-
----
-
-# Project Overview
-
-This project is being developed for real-world NGO field operations where 30–50 field workers collect survey and outreach data from communities.
-
-Instead of rebuilding an entire survey engine, CollectorGO integrates with existing KoboToolbox forms and workflows.
-
-The app focuses on:
-
-* field worker usability
-* simplified workflows
-* mobile accessibility
-* centralized form access
-* rapid MVP deployment
+Instead of rebuilding complex survey engines, CollectorGO integrates with existing **KoboToolbox** infrastructure for forms and submissions while providing a seamless mobile workflow, a centralized backend, and an interactive dashboard.
 
 ---
 
-# MVP Goal
+## 🏗 System Architecture
 
-The MVP objective is to provide:
+The repository is structured as a monorepo containing three core components:
 
-```text id="7jlwm3"
-Field Worker
-      ↓
-Login
-      ↓
-View Available Forms
-      ↓
-Open Kobo Form
-      ↓
-Fill Survey
-      ↓
-Submit Data
-```
+### 1. Mobile App (`/app`)
+- **Tech Stack:** React Native, Expo, TypeScript, React Navigation
+- **Purpose:** Field worker application for authentication, viewing assigned forms, and seamlessly filling out Kobo Enketo forms via WebView. Focuses on field worker usability, simplified workflows, and mobile accessibility.
 
-KoboToolbox handles:
+### 2. Backend API (`/backend`)
+- **Tech Stack:** FastAPI, Python 3.12+, SQLAlchemy, PostgreSQL, asyncpg, Uvicorn
+- **Purpose:** Centralized platform for user management, Kobo synchronization, reporting APIs, analytics, and exporting data.
 
-* form rendering
-* validations
-* submission handling
-* backend storage
-* exports
-* data pipelines
-
-CollectorGO acts as:
-
-* a mobile wrapper
-* workflow interface
-* branded NGO field application
+### 3. Web Dashboard (`/dashboard`)
+- **Tech Stack:** Next.js, React, Tailwind CSS
+- **Purpose:** Administrative interface for supervisor dashboards, KPIs, worker management, and advanced NGO analytics.
 
 ---
 
-# Tech Stack
+## 🗂 Project Structure
 
-## Mobile
-
-* React Native
-* Expo
-* TypeScript
-
-## Navigation
-
-* React Navigation
-
-## Form Rendering
-
-* react-native-webview
-
-## Existing Infrastructure
-
-* KoboToolbox
-
----
-
-# Why WebView?
-
-Rebuilding Kobo forms natively would require:
-
-* dynamic form rendering
-* skip logic
-* validations
-* uploads
-* offline sync
-* media handling
-
-This dramatically increases complexity.
-
-Using WebView allows:
-
-* rapid MVP development
-* reuse of existing Kobo workflows
-* faster deployment
-* reduced maintenance
-
----
-
-# MVP Features
-
-## Current MVP Scope
-
-* Splash Screen
-* Login Screen
-* Forms List Screen
-* Kobo Form WebView
-* Submission Workflow
-
----
-
-# Project Architecture
-
-```text id="yjlwm1"
-React Native App
-        ↓
-WebView
-        ↓
-Kobo Enketo Forms
-        ↓
-Kobo Backend
-        ↓
-NGO Data Pipeline
+```text
+CollectorGO/
+├── app/                  # React Native (Expo) Mobile App
+│   ├── src/              # Screens, Navigation, Components, etc.
+│   └── App.tsx
+├── backend/              # FastAPI Backend Server
+│   ├── app/              # API routes, models, schemas
+│   ├── alembic/          # Database migrations
+│   └── pyproject.toml    # Python dependencies (uv)
+├── dashboard/            # Next.js Web Dashboard
+│   ├── app/              # Next.js app router
+│   ├── components/       # React components
+│   └── package.json
+├── docs/                 # Documentation
+├── plan.md               # Original System Design and Roadmap
+└── README.md             # This file
 ```
 
 ---
 
-# Folder Structure
+## 🚀 Getting Started
 
-```text id="6jlwmx"
-app/
-├── src/
-│   ├── screens/
-│   ├── navigation/
-│   ├── components/
-│   ├── hooks/
-│   ├── context/
-│   ├── constants/
-│   └── types/
-├── assets/
-├── App.tsx
-├── app.json
-└── package.json
-```
+### Prerequisites
+- [Node.js](https://nodejs.org/) (for mobile and dashboard)
+- [Python 3.12+](https://www.python.org/) (for backend)
+- [Expo CLI](https://expo.dev/)
+- PostgreSQL database
 
----
-
-# Development Philosophy
-
-This project follows:
-
-* MVP-first engineering
-* minimal complexity
-* rapid iteration
-* real-world testing
-* incremental scaling
-
-The focus is:
-
-* shipping quickly
-* validating workflows
-* testing with real users
-* avoiding premature overengineering
-
----
-
-# Development Workflow
-
-## Local Development
-
-```bash id="rjlwm5"
+### Running the Mobile App
+```bash
+cd app
+npm install
 npx expo start
 ```
 
----
+### Running the Backend Server
+```bash
+cd backend
+# Install dependencies using uv
+uv sync
+# Run the FastAPI server
+uv run uvicorn app.main:app --reload
+```
 
-# Android Testing
-
-Using:
-
-* Expo Go
-* Development Builds
-* Physical Android devices
-
----
-
-# APK Builds
-
-```bash id="mjlwm7"
-eas build --platform android
+### Running the Dashboard
+```bash
+cd dashboard
+npm install
+npm run dev
 ```
 
 ---
 
-# Future Roadmap
+## 🗺 Roadmap & Strategy
 
-## V2
+CollectorGO is being developed in phases to prioritize rapid iteration, real-world validation, and incremental scaling:
 
-* Authentication backend
-* User management
-* Form assignment
-* Submission tracking
-* Analytics dashboard
+- **Phase 1 (MVP):** Mobile wrapper for KoboToolbox forms (validation & workflows).
+- **Phase 2 (Operational Layer):** FastAPI backend + PostgreSQL for centralized user and submission management.
+- **Phase 3 (Analytics Platform):** Next.js dashboard with KPIs, reporting, and GIS layers.
+- **Phase 4 (Intelligent Ops):** AI-assisted anomaly detection, NLP summaries, and predictive analytics.
 
-## V3
-
-* Offline-first architecture
-* Local database
-* Background sync
-* Media optimization
-
-## V4
-
-* AI-assisted analytics
-* GIS/Map visualization
-* Supervisor dashboards
-* Reporting pipelines
+For the full detailed roadmap and system design, please see [`plan.md`](./plan.md).
 
 ---
 
-# Engineering Notes
-
-This project intentionally avoids:
-
-* rebuilding KoboToolbox
-* complex backend systems in MVP
-* premature scalability engineering
-* unnecessary state management
-
-The goal is to:
-
-* leverage existing infrastructure intelligently
-* maximize development speed
-* focus on user workflow
-
----
-
-# Status
-
-Current Stage:
-
-## MVP Development Phase
-
----
-
-# License
+## 📄 License
 
 MIT License
+
