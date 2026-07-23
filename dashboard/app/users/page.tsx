@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUsers } from '@/hooks/useApi';
 import { api } from '@/services/api';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,11 +20,19 @@ export default function UsersPage() {
   // Form State
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('FIELD_WORKER');
-  
-  // Note: hardcoding demo org ID since there's no org selector right now
-  const orgId = '00000000-0000-0000-0000-000000000000'; // We'll let backend handle or error, wait actually we should fetch orgs or assume user's org. We will omit org_id if possible or fetch it. Let's send an empty org_id and let the backend fail or we need to pass a valid UUID. The backend seed script created an org. Let's use a dummy or skip org if optional. The schema says organization_id is UUID.
+  const [orgId, setOrgId] = useState('');
+
+  // Fetch current user's organization_id on mount
+  useEffect(() => {
+    api.get('/auth/me').then(res => {
+      if (res.data?.organization_id) {
+        setOrgId(res.data.organization_id);
+      }
+    }).catch(() => {});
+  }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,9 +41,10 @@ export default function UsersPage() {
       await api.post('/users/', {
         username,
         email,
+        full_name: fullName,
         password,
         role,
-        is_active: true,
+        organization_id: orgId,
       });
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setOpen(false);
@@ -66,7 +75,7 @@ export default function UsersPage() {
           <p className="text-slate-500 mt-2">Manage system users and their roles.</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger render={<Button />}>Create User</DialogTrigger>
+          <DialogTrigger asChild><Button>Create User</Button></DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create New User</DialogTitle>
@@ -74,15 +83,19 @@ export default function UsersPage() {
             <form onSubmit={handleCreate} className="space-y-4 pt-4">
               <div className="space-y-2">
                 <Label>Username</Label>
-                <Input value={username} onChange={e => setUsername(e.target.value)} required />
+                <Input value={username} onChange={e => setUsername(e.target.value)} required minLength={3} maxLength={50} />
               </div>
               <div className="space-y-2">
                 <Label>Email</Label>
                 <Input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
               </div>
               <div className="space-y-2">
+                <Label>Full Name</Label>
+                <Input value={fullName} onChange={e => setFullName(e.target.value)} required maxLength={255} />
+              </div>
+              <div className="space-y-2">
                 <Label>Password</Label>
-                <Input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                <Input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} />
               </div>
               <div className="space-y-2">
                 <Label>Role</Label>

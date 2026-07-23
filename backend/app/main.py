@@ -14,11 +14,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.include_router(auth_router)
-app.include_router(users_router, prefix="/users", tags=["Users"])
-app.include_router(forms_router)
-app.include_router(assignments_router)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,6 +21,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router, prefix="/api/v1")
+app.include_router(users_router, prefix="/api/v1/users", tags=["Users"])
+app.include_router(forms_router, prefix="/api/v1")
+app.include_router(assignments_router, prefix="/api/v1")
 
 
 @app.get("/")

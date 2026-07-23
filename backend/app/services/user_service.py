@@ -33,7 +33,6 @@ async def create_user(session: AsyncSession, user_in: UserCreate) -> User:
     user_data["password_hash"] = get_password_hash(password)
 
     # Create user
-    # Create user
     return await user_repository.create(session, user_data)
 
 

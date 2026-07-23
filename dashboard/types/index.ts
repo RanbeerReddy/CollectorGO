@@ -3,9 +3,11 @@ export type UserRole = 'ADMIN' | 'SUPERVISOR' | 'FIELD_WORKER';
 export interface User {
   id: string;
   username: string;
-  email: string | null;
+  email: string;
+  full_name: string;
   role: UserRole;
   is_active: boolean;
+  is_superuser: boolean;
   organization_id: string;
   created_at: string;
 }

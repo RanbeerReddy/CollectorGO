@@ -23,7 +23,6 @@ async def create(session: AsyncSession, user_data: dict) -> User:
     session.add(user)
     await session.commit()
     await session.refresh(user)
-    await session.refresh(user)
     return user
 
 

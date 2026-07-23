@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForms } from '@/hooks/useApi';
 import { api } from '@/services/api';
 import { useQueryClient } from '@tanstack/react-query';
@@ -17,6 +17,16 @@ export default function FormsPage() {
   const [open, setOpen] = useState(false);
   const [editingForm, setEditingForm] = useState<Form | null>(null);
   const [saving, setSaving] = useState(false);
+  const [orgId, setOrgId] = useState('');
+
+  // Fetch current user's organization_id on mount
+  useEffect(() => {
+    api.get('/auth/me').then(res => {
+      if (res.data?.organization_id) {
+        setOrgId(res.data.organization_id);
+      }
+    }).catch(() => {});
+  }, []);
 
   // Form State
   const [name, setName] = useState('');
@@ -45,13 +55,17 @@ export default function FormsPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const payload = {
+      const payload: Record<string, unknown> = {
         name,
-        description,
-        enketo_url: koboUrl,
-        category,
-        is_active: true
+        description: description || null,
+        enketo_url: koboUrl || null,
+        category: category || null,
       };
+
+      // organization_id is required only for creation
+      if (!editingForm) {
+        payload.organization_id = orgId;
+      }
 
       if (editingForm) {
         await api.put(`/forms/${editingForm.id}`, payload);
@@ -89,7 +103,7 @@ export default function FormsPage() {
           <p className="text-slate-500 mt-2">Manage KoboToolbox forms available to users.</p>
         </div>
         <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
-          <DialogTrigger render={<Button />}>Create Form</DialogTrigger>
+          <DialogTrigger asChild><Button>Create Form</Button></DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editingForm ? 'Edit Form' : 'Create New Form'}</DialogTitle>

@@ -3,6 +3,9 @@ API kobo tool.xlsx
 
 docs/
 
+# --- Node.js ---
+node_modules/
+.next/
 # --- Python / uv ---
 # Byte-compiled / optimized / DLL files
 __pycache__/

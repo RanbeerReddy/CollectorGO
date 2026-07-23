@@ -57,7 +57,7 @@ export default function AssignmentsPage() {
           <p className="text-slate-500 mt-2">Assign forms to field workers and track completion.</p>
         </div>
         <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
-          <DialogTrigger render={<Button />}>Assign Form</DialogTrigger>
+          <DialogTrigger asChild><Button>Assign Form</Button></DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Assign Form to User</DialogTitle>
